@@ -326,27 +326,40 @@ function Index() {
             <div className="kicker">Skills</div>
             <h2 className="section-title">Toolkit</h2>
           </div>
-          <div className="skills-wrap">
+          <div className="tools-grid">
+            {[
+              { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+              { name: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+              { name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
+              { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+              { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+              { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+              { name: "HTML5", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
+              { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+              { name: "Flutter", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" },
+              { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+              { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+              { name: "GitHub", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" },
+              { name: "Pandas", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" },
+              { name: "NumPy", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" },
+              { name: "Jupyter", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jupyter/jupyter-original.svg" },
+              { name: "VS Code", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" },
+            ].map((t) => (
+              <div key={t.name} className="tool-card" title={t.name}>
+                <img src={t.icon} alt={t.name} loading="lazy" />
+                <span>{t.name}</span>
+              </div>
+            ))}
+          </div>
+          <div className="skills-wrap" style={{ marginTop: 20 }}>
             <div className="skill-group">
-              <h4>Languages &amp; Data</h4>
+              <h4>Data</h4>
               <div className="chip-row">
                 <span className="chip">Data Analysis</span>
                 <span className="chip">Data Cleaning</span>
                 <span className="chip">Data Visualization</span>
                 <span className="chip">Data Engineering</span>
                 <span className="chip">Database Management</span>
-              </div>
-            </div>
-            <div className="skill-group">
-              <h4>Web &amp; Tools</h4>
-              <div className="chip-row">
-                <span className="chip">React.js</span>
-                <span className="chip">TypeScript</span>
-                <span className="chip">JavaScript</span>
-                <span className="chip">HTML/CSS</span>
-                <span className="chip">Flutter</span>
-                <span className="chip">Git</span>
-                <span className="chip">GitHub</span>
               </div>
             </div>
             <div className="skill-group">
