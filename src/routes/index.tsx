@@ -1,24 +1,319 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import "../styles/portfolio.css";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Lokesh Galakatla — Data & Software" },
+      { name: "description", content: "B.Tech CSE (Data Science) student — Python, SQL, React, and full-stack development. Portfolio of Lokesh Galakatla." },
+      { property: "og:title", content: "Lokesh Galakatla — Data & Software" },
+      { property: "og:description", content: "Portfolio of Lokesh Galakatla — data analysis and full-stack development." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  useEffect(() => {
+    const starLayer = document.getElementById("stars");
+    if (starLayer && !starLayer.childElementCount) {
+      for (let i = 0; i < 90; i++) {
+        const s = document.createElement("span");
+        s.style.top = Math.random() * 100 + "%";
+        s.style.left = Math.random() * 100 + "%";
+        s.style.animationDelay = Math.random() * 4 + "s";
+        const size = Math.random() * 1.6 + 1;
+        s.style.width = size + "px";
+        s.style.height = size + "px";
+        starLayer.appendChild(s);
+      }
+    }
+    const asteroidLayer = document.getElementById("asteroids");
+    if (asteroidLayer && !asteroidLayer.childElementCount) {
+      for (let i = 0; i < 9; i++) {
+        const rock = document.createElement("div");
+        rock.className = "asteroid";
+        const size = Math.random() * 34 + 14;
+        rock.style.width = size + "px";
+        rock.style.height = size * (0.8 + Math.random() * 0.3) + "px";
+        rock.style.left = Math.random() * 100 + "%";
+        rock.style.setProperty("--drift-x", Math.random() * 120 - 60 + "px");
+        const drift = Math.random() * 30 + 30;
+        const tumble = Math.random() * 14 + 10;
+        rock.style.animationDuration = `${drift}s, ${tumble}s`;
+        rock.style.animationDelay = `-${Math.random() * drift}s, -${Math.random() * tumble}s`;
+        asteroidLayer.appendChild(rock);
+      }
+    }
+    const toggle = document.getElementById("navtoggle");
+    const menu = document.getElementById("mobileMenu");
+    if (!toggle || !menu) return;
+    const onToggle = () => {
+      const open = menu.classList.toggle("open");
+      toggle.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    };
+    const close = () => {
+      menu.classList.remove("open");
+      toggle.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    };
+    toggle.addEventListener("click", onToggle);
+    const links = menu.querySelectorAll("a");
+    links.forEach((a) => a.addEventListener("click", close));
+    return () => {
+      toggle.removeEventListener("click", onToggle);
+      links.forEach((a) => a.removeEventListener("click", close));
+    };
+  }, []);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="portfolio-root">
+      <div id="stars" />
+      <div id="asteroids" />
+
+      <header>
+        <nav>
+          <div className="logo"><span className="dot" />Lokesh Galakatla</div>
+          <ul className="navlinks">
+            <li><a href="#about"><span className="nav-num">1</span>About</a></li>
+            <li><a href="#experience"><span className="nav-num">2</span>Experience</a></li>
+            <li><a href="#projects"><span className="nav-num">3</span>Projects</a></li>
+            <li><a href="#skills"><span className="nav-num">4</span>Skills</a></li>
+            <li><a href="#education"><span className="nav-num">5</span>Education</a></li>
+          </ul>
+          <div className="nav-actions">
+            <a className="icon-link" href="https://github.com/lokesh599" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.87-1.35-3.87-1.35-.53-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.72-1.54-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.5 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.27 5.7.42.36.78 1.07.78 2.16 0 1.56-.01 2.82-.01 3.2 0 .31.21.66.79.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" /></svg>
+            </a>
+            <a className="icon-link" href="https://www.linkedin.com/in/lokesh-galakatla-962256305/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56z" /></svg>
+            </a>
+            <a className="nav-cta nav-cta-solid" href="#contact">Get in touch</a>
+          </div>
+          <button className="navtoggle" id="navtoggle" aria-label="Toggle menu" aria-expanded="false">
+            <span /><span /><span />
+          </button>
+        </nav>
+        <div className="mobile-menu" id="mobileMenu">
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="https://github.com/lokesh599" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/lokesh-galakatla-962256305/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a className="nav-cta" href="#contact">Get in touch</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <main className="wrap">
+        <section className="hero" id="top">
+          <div>
+            <div className="eyebrow">CSE (Data Science) · Class of 2027</div>
+            <h1>I turn raw data<br />into <span className="grad">clear decisions.</span></h1>
+            <p className="lede">B.Tech Computer Science &amp; Engineering student specializing in Data Science, with hands-on experience across Python data analysis and modern web development.</p>
+            <div className="hero-actions">
+              <a className="btn btn-primary" href="#projects">View my work →</a>
+              <a className="btn btn-ghost" href="mailto:galakatalalokesh26@gmail.com">Say hello</a>
+            </div>
+            <div className="hero-meta">
+              <div><b>8.08</b>CGPA</div>
+              <div><b>2</b>Internships</div>
+              <div><b>2</b>Featured projects</div>
+              <div><b>Surampalem, AP</b>Based in</div>
+            </div>
+          </div>
+          <div className="orbits" role="img" aria-label="Orbiting diagram of core skills around a central sun labeled Lokesh">
+            <div className="ring" style={{ width: 110, height: 110 }} />
+            <div className="ring" style={{ width: 190, height: 190 }} />
+            <div className="ring" style={{ width: 270, height: 270 }} />
+            <div className="ring" style={{ width: 350, height: 350 }} />
+            <div className="ring" style={{ width: 420, height: 420 }} />
+            <div className="core" />
+            <div className="core-label">Lokesh</div>
+            <div className="orbit-path" style={{ width: 110, height: 110, animationDuration: "14s" }}>
+              <div className="planet" style={{ animationDuration: "14s" }}><span className="label">Python</span></div>
+            </div>
+            <div className="orbit-path" style={{ width: 190, height: 190, animationDuration: "20s", animationDirection: "reverse" }}>
+              <div className="planet" style={{ animationDuration: "20s", animationDirection: "reverse" }}><span className="label">SQL</span></div>
+            </div>
+            <div className="orbit-path" style={{ width: 270, height: 270, animationDuration: "27s" }}>
+              <div className="planet" style={{ animationDuration: "27s" }}><span className="label">React.js</span></div>
+            </div>
+            <div className="orbit-path" style={{ width: 350, height: 350, animationDuration: "34s", animationDirection: "reverse" }}>
+              <div className="planet" style={{ animationDuration: "34s", animationDirection: "reverse" }}><span className="label">Data Viz</span></div>
+            </div>
+            <div className="orbit-path" style={{ width: 420, height: 420, animationDuration: "42s" }}>
+              <div className="planet" style={{ animationDuration: "42s" }}><span className="label">Flutter</span></div>
+            </div>
+            <div className="orbit-path" style={{ width: 420, height: 420, animationDuration: "42s", animationDelay: "-21s" }}>
+              <div className="planet" style={{ animationDuration: "42s", animationDelay: "-21s" }}><span className="label">Java</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="about">
+          <div className="section-head">
+            <div className="kicker">About</div>
+            <h2 className="section-title">Grounded in analysis, comfortable building products</h2>
+          </div>
+          <div className="about-grid">
+            <div>
+              <p>I'm a <b>Computer Science &amp; Engineering (Data Science)</b> student at Aditya College of Engineering &amp; Technology, currently maintaining a <b>CGPA of 8.08</b>. My interest sits at the intersection of data analysis and software engineering — I like finding the story inside a messy dataset just as much as I like shipping the interface that tells that story to someone else.</p>
+              <p>My background spans <b>Python, SQL, and Java</b> for analysis and problem-solving, alongside practical experience building responsive web applications with <b>React.js and TypeScript</b>. Two internships have taken me from cleaning real-world datasets to integrating frontend components with live backend APIs.</p>
+              <p>I'm looking for opportunities to apply these skills on projects that matter, keep learning in a fast-moving team, and grow into a well-rounded data &amp; software engineer.</p>
+            </div>
+            <div className="fact-list">
+              <div className="fact"><span>LOCATION</span><span>Kanchugummala, Andhra Pradesh</span></div>
+              <div className="fact"><span>EMAIL</span><span>galakatalalokesh26@gmail.com</span></div>
+              <div className="fact"><span>PHONE</span><span>+91 8309113101</span></div>
+              <div className="fact"><span>DEGREE</span><span>B.Tech CSE (Data Science)</span></div>
+              <div className="fact"><span>GRADUATING</span><span>2027</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="experience">
+          <div className="section-head">
+            <div className="kicker">Experience</div>
+            <h2 className="section-title">Where I've worked</h2>
+            <p className="section-sub">Two internships, two different sides of building with data — analysis first, then the applications that put it in front of people.</p>
+          </div>
+          <div className="timeline">
+            <div className="tl-item">
+              <div className="tl-dot" />
+              <div className="tl-date">MAY 2026 — JUL 2026</div>
+              <div className="tl-role">Vibe Coding Intern</div>
+              <div className="tl-org">Smart Bridge · Summer Online Internship</div>
+              <ul>
+                <li>Collaborated on the development of modern web applications using industry-standard development practices.</li>
+                <li>Built responsive and interactive user interfaces using React.js, TypeScript, HTML, CSS, and JavaScript.</li>
+                <li>Integrated frontend components with backend APIs to deliver seamless user experiences.</li>
+                <li>Used Git and GitHub for version control, collaboration, and clean, maintainable code.</li>
+              </ul>
+            </div>
+            <div className="tl-item">
+              <div className="tl-dot" />
+              <div className="tl-date">MAY 2025 — JUL 2025</div>
+              <div className="tl-role">Data Analysis Intern</div>
+              <div className="tl-org">APSSDC · Summer Online Internship</div>
+              <ul>
+                <li>Analyzed real-world datasets using Python to identify trends and extract meaningful insights.</li>
+                <li>Performed data cleaning, preprocessing, and visualization to improve data quality and support analysis.</li>
+                <li>Applied statistical analysis techniques to solve data-driven problems and interpret results effectively.</li>
+                <li>Strengthened analytical thinking through hands-on projects and practical assignments.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="projects">
+          <div className="section-head">
+            <div className="kicker">Projects</div>
+            <h2 className="section-title">Selected work</h2>
+            <p className="section-sub">A look at how I approach both ends of the stack — from raw data to a usable interface.</p>
+          </div>
+          <div className="proj-grid">
+            <div className="proj-card">
+              <span className="proj-tag">Data Analysis</span>
+              <h3>Student Social Media Addiction</h3>
+              <p>Analyzed real-world survey data to uncover trends in student social media usage, cleaning and preprocessing the dataset before applying statistical techniques to interpret behavior patterns and support informed decisions.</p>
+              <div className="stack">
+                <span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Jupyter Notebook</span>
+              </div>
+            </div>
+            <div className="proj-card">
+              <span className="proj-tag">Full-Stack Web App</span>
+              <h3>EcoTrack</h3>
+              <p>An environmental monitoring and sustainability platform — a responsive web application that visualizes environmental data through interactive, reusable UI components, integrated end-to-end with backend APIs.</p>
+              <div className="stack">
+                <span>React.js</span><span>TypeScript</span><span>Node.js</span><span>HTML/CSS</span><span>Git</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="skills">
+          <div className="section-head">
+            <div className="kicker">Skills</div>
+            <h2 className="section-title">Toolkit</h2>
+          </div>
+          <div className="skills-wrap">
+            <div className="skill-group">
+              <h4>Languages &amp; Data</h4>
+              <div className="chip-row">
+                <span className="chip">Data Analysis</span>
+                <span className="chip">Data Cleaning</span>
+                <span className="chip">Data Visualization</span>
+                <span className="chip">Data Engineering</span>
+                <span className="chip">Database Management</span>
+              </div>
+            </div>
+            <div className="skill-group">
+              <h4>Web &amp; Tools</h4>
+              <div className="chip-row">
+                <span className="chip">React.js</span>
+                <span className="chip">TypeScript</span>
+                <span className="chip">JavaScript</span>
+                <span className="chip">HTML/CSS</span>
+                <span className="chip">Flutter</span>
+                <span className="chip">Git</span>
+                <span className="chip">GitHub</span>
+              </div>
+            </div>
+            <div className="skill-group">
+              <h4>Working Style</h4>
+              <div className="chip-row">
+                <span className="chip">Problem Solving</span>
+                <span className="chip">Communication</span>
+                <span className="chip">Teamwork</span>
+                <span className="chip">Time Management</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="education">
+          <div className="section-head">
+            <div className="kicker">Education</div>
+            <h2 className="section-title">Academic background &amp; achievements</h2>
+          </div>
+          <div className="edu-grid">
+            <div className="edu-card">
+              <h3>Bachelor of Technology — CSE (Data Science)</h3>
+              <div className="edu-sub">Aditya College of Engineering &amp; Technology, Surampalem · 2023 – 2027</div>
+              <div className="cgpa">8.08 <span>/ 10 CGPA</span></div>
+            </div>
+            <div className="ach-card">
+              <h4>Achievements</h4>
+              <ul>
+                <li>Successfully completed Data Analysis Internship at APSSDC.</li>
+                <li>Introduction to Data Science — Cisco Networking Academy.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section className="contact" id="contact">
+          <div className="kicker" style={{ justifyContent: "center", display: "flex" }}>Contact</div>
+          <h2>Let's build something with data.</h2>
+          <p>Open to internships and entry-level opportunities in data analysis, data engineering, and full-stack development.</p>
+          <div className="contact-links">
+            <a className="btn btn-primary" href="mailto:galakatalalokesh26@gmail.com">Email me</a>
+            <a className="btn btn-ghost" href="tel:+918309113101">+91 8309113101</a>
+            <a className="btn btn-ghost" href="https://www.linkedin.com/in/lokesh-galakatla-962256305/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a className="btn btn-ghost" href="https://github.com/lokesh599" target="_blank" rel="noopener noreferrer">GitHub</a>
+          </div>
+        </section>
+      </main>
+
+      <footer>© 2026 Lokesh Galakatla · Built with data &amp; curiosity</footer>
     </div>
   );
 }
