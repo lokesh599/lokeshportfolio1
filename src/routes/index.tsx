@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../styles/portfolio.css";
+import profileAsset from "@/assets/profile.png.asset.json";
+import resumeAsset from "@/assets/lokesh-resume.pdf.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,6 +19,47 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const navRef = useRef<HTMLUListElement>(null);
+  const indicatorRef = useRef<HTMLDivElement>(null);
+  const [activeId, setActiveId] = useState<string>("about");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-portfolio-theme", theme);
+  }, [theme]);
+
+  // Scroll spy
+  useEffect(() => {
+    const ids = ["about", "experience", "projects", "skills", "education"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveId(e.target.id);
+        });
+      },
+      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  // Move indicator to active nav link
+  useEffect(() => {
+    const nav = navRef.current;
+    const ind = indicatorRef.current;
+    if (!nav || !ind) return;
+    const active = nav.querySelector<HTMLAnchorElement>(`a[data-id="${activeId}"]`);
+    if (!active) return;
+    const navRect = nav.getBoundingClientRect();
+    const r = active.getBoundingClientRect();
+    ind.style.width = r.width + "px";
+    ind.style.transform = `translateX(${r.left - navRect.left}px)`;
+    ind.style.opacity = "1";
+  }, [activeId]);
+
   useEffect(() => {
     const starLayer = document.getElementById("stars");
     if (starLayer && !starLayer.childElementCount) {
@@ -70,29 +113,55 @@ function Index() {
     };
   }, []);
 
+  const AnimatedTitle = ({ text }: { text: string }) => (
+    <>
+      {text.split("").map((ch, i) => (
+        <span
+          key={i}
+          className="anim-letter"
+          style={{ animationDelay: `${i * 0.05}s` }}
+        >
+          {ch === " " ? "\u00A0" : ch}
+        </span>
+      ))}
+    </>
+  );
+
   return (
-    <div className="portfolio-root">
+    <div className="portfolio-root" data-theme={theme}>
       <div id="stars" />
       <div id="asteroids" />
 
       <header>
         <nav>
           <div className="logo"><span className="dot" />Lokesh Galakatla</div>
-          <ul className="navlinks">
-            <li><a href="#about"><span className="nav-num">1</span>About</a></li>
-            <li><a href="#experience"><span className="nav-num">2</span>Experience</a></li>
-            <li><a href="#projects"><span className="nav-num">3</span>Projects</a></li>
-            <li><a href="#skills"><span className="nav-num">4</span>Skills</a></li>
-            <li><a href="#education"><span className="nav-num">5</span>Education</a></li>
+          <ul className="navlinks" ref={navRef}>
+            <div className="nav-indicator" ref={indicatorRef} />
+            <li><a href="#about" data-id="about" className={activeId==="about"?"active":""}><span className="nav-num">1</span>About</a></li>
+            <li><a href="#experience" data-id="experience" className={activeId==="experience"?"active":""}><span className="nav-num">2</span>Experience</a></li>
+            <li><a href="#projects" data-id="projects" className={activeId==="projects"?"active":""}><span className="nav-num">3</span>Projects</a></li>
+            <li><a href="#skills" data-id="skills" className={activeId==="skills"?"active":""}><span className="nav-num">4</span>Skills</a></li>
+            <li><a href="#education" data-id="education" className={activeId==="education"?"active":""}><span className="nav-num">5</span>Education</a></li>
           </ul>
           <div className="nav-actions">
+            <button
+              className="icon-link theme-toggle"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+              ) : (
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              )}
+            </button>
             <a className="icon-link" href="https://github.com/lokesh599" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.87-1.35-3.87-1.35-.53-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.72-1.54-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.5 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.27 5.7.42.36.78 1.07.78 2.16 0 1.56-.01 2.82-.01 3.2 0 .31.21.66.79.55A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" /></svg>
             </a>
             <a className="icon-link" href="https://www.linkedin.com/in/lokesh-galakatla-962256305/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
               <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56z" /></svg>
             </a>
-            <a className="nav-cta nav-cta-solid" href="#contact">Get in touch</a>
+            <a className="nav-cta nav-cta-solid" href={resumeAsset.url} target="_blank" rel="noopener noreferrer">Resume</a>
           </div>
           <button className="navtoggle" id="navtoggle" aria-label="Toggle menu" aria-expanded="false">
             <span /><span /><span />
@@ -107,7 +176,7 @@ function Index() {
             <li><a href="#education">Education</a></li>
             <li><a href="https://github.com/lokesh599" target="_blank" rel="noopener noreferrer">GitHub</a></li>
             <li><a href="https://www.linkedin.com/in/lokesh-galakatla-962256305/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-            <li><a className="nav-cta" href="#contact">Get in touch</a></li>
+            <li><a className="nav-cta" href={resumeAsset.url} target="_blank" rel="noopener noreferrer">Resume</a></li>
           </ul>
         </div>
       </header>
@@ -116,11 +185,18 @@ function Index() {
         <section className="hero" id="top">
           <div>
             <div className="eyebrow">CSE (Data Science) · Class of 2027</div>
-            <h1>I turn raw data<br />into <span className="grad">clear decisions.</span></h1>
+            <h1 className="hero-title">
+              <span className="hero-line"><AnimatedTitle text="I turn raw data" /></span>
+              <br />
+              <span className="hero-line">
+                <AnimatedTitle text="into " />
+                <span className="grad"><AnimatedTitle text="clear decisions." /></span>
+              </span>
+            </h1>
             <p className="lede">B.Tech Computer Science &amp; Engineering student specializing in Data Science, with hands-on experience across Python data analysis and modern web development.</p>
             <div className="hero-actions">
               <a className="btn btn-primary" href="#projects">View my work →</a>
-              <a className="btn btn-ghost" href="mailto:galakatalalokesh26@gmail.com">Say hello</a>
+              <a className="btn btn-ghost" href={resumeAsset.url} target="_blank" rel="noopener noreferrer">Download Resume</a>
             </div>
             <div className="hero-meta">
               <div><b>8.08</b>CGPA</div>
@@ -128,6 +204,11 @@ function Index() {
               <div><b>2</b>Featured projects</div>
               <div><b>Surampalem, AP</b>Based in</div>
             </div>
+          </div>
+          <div className="hero-visual">
+          <div className="profile-frame">
+            <img src={profileAsset.url} alt="Lokesh Galakatla" className="profile-img" />
+            <div className="profile-ring" />
           </div>
           <div className="orbits" role="img" aria-label="Orbiting diagram of core skills around a central sun labeled Lokesh">
             <div className="ring" style={{ width: 110, height: 110 }} />
@@ -155,6 +236,7 @@ function Index() {
             <div className="orbit-path" style={{ width: 420, height: 420, animationDuration: "42s", animationDelay: "-21s" }}>
               <div className="planet" style={{ animationDuration: "42s", animationDelay: "-21s" }}><span className="label">Java</span></div>
             </div>
+          </div>
           </div>
         </section>
 
