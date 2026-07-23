@@ -181,3 +181,34 @@ html{scroll-behavior:smooth;}
 .tool-card:hover img{transform:scale(1.15) rotate(-6deg);}
 .tool-card span{font-family:var(--font-mono); font-size:11.5px; color:var(--muted);}
 .tool-card:hover span{color:var(--text);}
+
+/* ============ Planet icons on orbits ============ */
+.planet{cursor:default;}
+.planet-icon{width:26px; height:26px; object-fit:contain; filter:drop-shadow(0 4px 10px rgba(56,189,248,.4)); transition:transform .3s;}
+.planet:hover .planet-icon{transform:scale(1.25) rotate(8deg);}
+.planet:hover .label{border-color:var(--accent-b); color:var(--text); box-shadow:0 0 14px rgba(56,189,248,.35);}
+
+/* ============ Mouse-follow cursor ============ */
+@media(hover:hover) and (pointer:fine){
+  .portfolio-root{cursor:none;}
+  .portfolio-root a, .portfolio-root button{cursor:none;}
+}
+.cursor-dot, .cursor-trail{position:fixed; top:0; left:0; pointer-events:none; z-index:9999; border-radius:50%; will-change:transform; mix-blend-mode:screen;}
+.cursor-dot{width:10px; height:10px; margin:-5px 0 0 -5px; background:var(--grad); box-shadow:0 0 12px rgba(255,95,143,.8);}
+.cursor-trail{width:38px; height:38px; margin:-19px 0 0 -19px; border:1.5px solid rgba(56,189,248,.55); box-shadow:0 0 24px rgba(56,189,248,.35); transition:width .2s, height .2s, border-color .2s;}
+@media(hover:none), (pointer:coarse){.cursor-dot, .cursor-trail{display:none;}}
+
+/* ============ Puzzle ============ */
+.puzzle-bar{display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:18px; font-family:var(--font-mono); font-size:13px; color:var(--muted);}
+.puzzle-stat b{color:var(--text); font-family:var(--font-display); font-size:15px; margin-left:4px;}
+.puzzle-win{color:var(--accent-c); font-weight:600;}
+.puzzle-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:520px;}
+.puzzle-card{position:relative; aspect-ratio:1/1; border:none; background:transparent; padding:0; perspective:600px; cursor:pointer;}
+.puzzle-face{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; border-radius:14px; border:1px solid var(--line); background:var(--bg-panel); font-size:30px; backface-visibility:hidden; transition:transform .5s;}
+.puzzle-back{background:linear-gradient(135deg, var(--bg-panel), var(--bg-panel-2)); color:var(--muted); font-family:var(--font-mono);}
+.puzzle-front{transform:rotateY(180deg); background:var(--bg-panel-2); border-color:var(--accent-b);}
+.puzzle-card.flipped .puzzle-back{transform:rotateY(180deg);}
+.puzzle-card.flipped .puzzle-front{transform:rotateY(360deg);}
+.puzzle-card.matched .puzzle-front{border-color:var(--accent-c); box-shadow:0 0 18px rgba(255,180,84,.35); background:linear-gradient(135deg, rgba(255,180,84,.15), var(--bg-panel-2));}
+.puzzle-card:hover .puzzle-back{border-color:var(--accent-b);}
+@media(max-width:520px){.puzzle-grid{grid-template-columns:repeat(4,1fr); gap:8px;} .puzzle-face{font-size:24px;}}
