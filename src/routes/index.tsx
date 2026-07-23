@@ -439,74 +439,75 @@ function Index() {
   );
 }
 
-function MemoryPuzzle() {
-  const emojis = ["🚀", "🪐", "🌙", "⭐", "☄️", "🛰️", "👨‍🚀", "🌌"];
-  const build = () => {
-    const deck = [...emojis, ...emojis]
-      .map((v, i) => ({ id: i, v, flipped: false, matched: false }))
-      .sort(() => Math.random() - 0.5);
-    return deck;
+function SlidePuzzle() {
+  const SIZE = 3;
+  const TOTAL = SIZE * SIZE;
+  const solvedBoard = Array.from({ length: TOTAL }, (_, i) => (i + 1) % TOTAL); // [1..8,0]
+
+  const isSolvable = (arr: number[]) => {
+    let inv = 0;
+    const tiles = arr.filter((n) => n !== 0);
+    for (let i = 0; i < tiles.length; i++)
+      for (let j = i + 1; j < tiles.length; j++)
+        if (tiles[i] > tiles[j]) inv++;
+    return inv % 2 === 0;
   };
-  const [cards, setCards] = useState(build);
-  const [picked, setPicked] = useState<number[]>([]);
-  const [moves, setMoves] = useState(0);
-  const [lock, setLock] = useState(false);
 
-  const solved = cards.every((c) => c.matched);
-
-  const flip = (idx: number) => {
-    if (lock) return;
-    const c = cards[idx];
-    if (c.flipped || c.matched) return;
-    const next = cards.map((x, i) => (i === idx ? { ...x, flipped: true } : x));
-    const nextPicked = [...picked, idx];
-    setCards(next);
-    setPicked(nextPicked);
-    if (nextPicked.length === 2) {
-      setMoves((m) => m + 1);
-      setLock(true);
-      const [a, b] = nextPicked;
-      if (next[a].v === next[b].v) {
-        setTimeout(() => {
-          setCards((cs) => cs.map((x, i) => (i === a || i === b ? { ...x, matched: true } : x)));
-          setPicked([]);
-          setLock(false);
-        }, 400);
-      } else {
-        setTimeout(() => {
-          setCards((cs) => cs.map((x, i) => (i === a || i === b ? { ...x, flipped: false } : x)));
-          setPicked([]);
-          setLock(false);
-        }, 800);
-      }
+  const shuffle = (): number[] => {
+    while (true) {
+      const a = [...solvedBoard].sort(() => Math.random() - 0.5);
+      if (isSolvable(a) && a.some((v, i) => v !== solvedBoard[i])) return a;
     }
   };
 
-  const reset = () => { setCards(build()); setPicked([]); setMoves(0); setLock(false); };
+  const [board, setBoard] = useState<number[]>(shuffle);
+  const [moves, setMoves] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const solved = board.every((v, i) => v === solvedBoard[i]);
+
+  useEffect(() => {
+    if (solved) return;
+    const t = setInterval(() => setSeconds((s) => s + 1), 1000);
+    return () => clearInterval(t);
+  }, [solved]);
+
+  const tryMove = (idx: number) => {
+    if (solved) return;
+    const empty = board.indexOf(0);
+    const [r1, c1] = [Math.floor(idx / SIZE), idx % SIZE];
+    const [r2, c2] = [Math.floor(empty / SIZE), empty % SIZE];
+    if (Math.abs(r1 - r2) + Math.abs(c1 - c2) !== 1) return;
+    const next = [...board];
+    [next[idx], next[empty]] = [next[empty], next[idx]];
+    setBoard(next);
+    setMoves((m) => m + 1);
+  };
+
+  const reset = () => { setBoard(shuffle()); setMoves(0); setSeconds(0); };
 
   return (
     <section id="puzzle">
       <div className="section-head">
         <div className="kicker">Puzzle</div>
-        <h2 className="section-title">Cosmic memory match</h2>
-        <p className="section-sub">A quick break — flip the tiles and match all pairs. Because portfolios should be fun too.</p>
+        <h2 className="section-title">Cosmic slide puzzle</h2>
+        <p className="section-sub">Slide the tiles to arrange 1–8 in order. Tap a tile next to the empty space to move it.</p>
       </div>
       <div className="puzzle-bar">
         <span className="puzzle-stat">Moves: <b>{moves}</b></span>
-        <span className="puzzle-stat">Matched: <b>{cards.filter((c) => c.matched).length / 2}</b> / {emojis.length}</span>
+        <span className="puzzle-stat">Time: <b>{seconds}s</b></span>
         {solved && <span className="puzzle-win">Solved! 🎉</span>}
-        <button className="btn btn-ghost" onClick={reset}>Reset</button>
+        <button className="btn btn-ghost" onClick={reset}>Shuffle</button>
       </div>
-      <div className="puzzle-grid">
-        {cards.map((c, i) => (
+      <div className="slide-grid">
+        {board.map((v, i) => (
           <button
-            key={c.id}
-            className={`puzzle-card${c.flipped || c.matched ? " flipped" : ""}${c.matched ? " matched" : ""}`}
-            onClick={() => flip(i)}
-            aria-label={c.flipped ? c.v : "Hidden card"}
+            key={i}
+            className={`slide-tile${v === 0 ? " empty" : ""}${solved && v !== 0 ? " done" : ""}`}
+            onClick={() => tryMove(i)}
+            disabled={v === 0}
+            aria-label={v === 0 ? "empty" : `tile ${v}`}
           >
-            <span className="puzzle-face puzzle-back">?</span>
-            <span className="puzzle-face puzzle-front">{c.v}</span>
+            {v !== 0 && <span>{v}</span>}
           </button>
         ))}
       </div>
