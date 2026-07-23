@@ -161,8 +161,9 @@ function Index() {
 
       <header>
         <nav>
-          <div className="logo"><span className="dot" />Lokesh Galakatla</div>
+          <div className="logo"><span className="dot" /><span className="logo-name">LOKESH GALAKATLA</span></div>
           <ul className="navlinks" ref={navRef}>
+            <div className="nav-connector" aria-hidden="true" />
             <div className="nav-indicator" ref={indicatorRef} />
             <li><a href="#about" data-id="about" className={activeId==="about"?"active":""}><span className="nav-num">1</span>About</a></li>
             <li><a href="#experience" data-id="experience" className={activeId==="experience"?"active":""}><span className="nav-num">2</span>Experience</a></li>
@@ -418,7 +419,7 @@ function Index() {
           </div>
         </section>
 
-        <MemoryPuzzle />
+        <SlidePuzzle />
 
         <section className="contact" id="contact">
           <div className="kicker" style={{ justifyContent: "center", display: "flex" }}>Contact</div>
