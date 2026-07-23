@@ -438,3 +438,78 @@ function Index() {
     </div>
   );
 }
+
+function MemoryPuzzle() {
+  const emojis = ["🚀", "🪐", "🌙", "⭐", "☄️", "🛰️", "👨‍🚀", "🌌"];
+  const build = () => {
+    const deck = [...emojis, ...emojis]
+      .map((v, i) => ({ id: i, v, flipped: false, matched: false }))
+      .sort(() => Math.random() - 0.5);
+    return deck;
+  };
+  const [cards, setCards] = useState(build);
+  const [picked, setPicked] = useState<number[]>([]);
+  const [moves, setMoves] = useState(0);
+  const [lock, setLock] = useState(false);
+
+  const solved = cards.every((c) => c.matched);
+
+  const flip = (idx: number) => {
+    if (lock) return;
+    const c = cards[idx];
+    if (c.flipped || c.matched) return;
+    const next = cards.map((x, i) => (i === idx ? { ...x, flipped: true } : x));
+    const nextPicked = [...picked, idx];
+    setCards(next);
+    setPicked(nextPicked);
+    if (nextPicked.length === 2) {
+      setMoves((m) => m + 1);
+      setLock(true);
+      const [a, b] = nextPicked;
+      if (next[a].v === next[b].v) {
+        setTimeout(() => {
+          setCards((cs) => cs.map((x, i) => (i === a || i === b ? { ...x, matched: true } : x)));
+          setPicked([]);
+          setLock(false);
+        }, 400);
+      } else {
+        setTimeout(() => {
+          setCards((cs) => cs.map((x, i) => (i === a || i === b ? { ...x, flipped: false } : x)));
+          setPicked([]);
+          setLock(false);
+        }, 800);
+      }
+    }
+  };
+
+  const reset = () => { setCards(build()); setPicked([]); setMoves(0); setLock(false); };
+
+  return (
+    <section id="puzzle">
+      <div className="section-head">
+        <div className="kicker">Puzzle</div>
+        <h2 className="section-title">Cosmic memory match</h2>
+        <p className="section-sub">A quick break — flip the tiles and match all pairs. Because portfolios should be fun too.</p>
+      </div>
+      <div className="puzzle-bar">
+        <span className="puzzle-stat">Moves: <b>{moves}</b></span>
+        <span className="puzzle-stat">Matched: <b>{cards.filter((c) => c.matched).length / 2}</b> / {emojis.length}</span>
+        {solved && <span className="puzzle-win">Solved! 🎉</span>}
+        <button className="btn btn-ghost" onClick={reset}>Reset</button>
+      </div>
+      <div className="puzzle-grid">
+        {cards.map((c, i) => (
+          <button
+            key={c.id}
+            className={`puzzle-card${c.flipped || c.matched ? " flipped" : ""}${c.matched ? " matched" : ""}`}
+            onClick={() => flip(i)}
+            aria-label={c.flipped ? c.v : "Hidden card"}
+          >
+            <span className="puzzle-face puzzle-back">?</span>
+            <span className="puzzle-face puzzle-front">{c.v}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
