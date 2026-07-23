@@ -148,7 +148,11 @@ html{scroll-behavior:smooth;}
 
 /* ============ Nav sliding indicator ============ */
 .navlinks{position:relative;}
-.nav-indicator{position:absolute; bottom:-8px; left:0; height:2px; width:0; background:var(--grad); border-radius:2px; box-shadow:0 0 12px rgba(255,95,143,.55); transition:transform .45s cubic-bezier(.7,.15,.2,1), width .45s cubic-bezier(.7,.15,.2,1); opacity:0; pointer-events:none;}
+.nav-indicator{position:absolute; bottom:-10px; left:0; height:2px; width:0; background:var(--grad); border-radius:2px; box-shadow:0 0 12px rgba(255,95,143,.55), 0 0 24px rgba(56,189,248,.35); transition:transform .55s cubic-bezier(.7,.15,.2,1), width .55s cubic-bezier(.7,.15,.2,1); opacity:0; pointer-events:none; overflow:visible;}
+.nav-indicator::before{content:""; position:absolute; inset:-1px 0; background:linear-gradient(90deg, transparent, rgba(255,255,255,.9), transparent); border-radius:2px; animation:nav-shimmer 2.2s linear infinite;}
+.nav-indicator::after{content:""; position:absolute; left:-6px; right:-6px; bottom:-4px; height:1px; background:linear-gradient(90deg, transparent, var(--accent-a), var(--accent-b), var(--accent-c), transparent); opacity:.55; filter:blur(1px); animation:nav-flow 3s ease-in-out infinite;}
+@keyframes nav-shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes nav-flow{0%,100%{opacity:.35; transform:scaleX(.85)}50%{opacity:.85; transform:scaleX(1.05)}}
 .navlinks a.active{color:var(--text);}
 .navlinks a.active .nav-num{background:var(--grad); color:#080b14; opacity:1;}
 
@@ -165,13 +169,24 @@ html{scroll-behavior:smooth;}
 
 /* ============ Profile picture ============ */
 .hero-visual{position:relative; display:flex; align-items:center; justify-content:center;}
-.profile-frame{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:150px; height:150px; z-index:3; border-radius:50%; padding:4px; background:var(--grad); box-shadow:0 20px 60px rgba(255,95,143,.35), 0 0 40px rgba(56,189,248,.3); animation:floaty 6s ease-in-out infinite;}
+.profile-frame{position:absolute; top:50%; left:50%; width:130px; height:130px; z-index:5; border-radius:50%; padding:4px; background:var(--grad); box-shadow:0 20px 60px rgba(255,95,143,.45), 0 0 60px rgba(56,189,248,.4), 0 0 120px rgba(255,180,84,.25); animation:profile-orbit 9s ease-in-out infinite;}
 .profile-img{width:100%; height:100%; border-radius:50%; object-fit:cover; display:block; border:3px solid var(--bg);}
-.profile-ring{position:absolute; inset:-14px; border-radius:50%; border:1px dashed rgba(56,189,248,.5); animation:spin 24s linear infinite;}
+.profile-ring{position:absolute; inset:-14px; border-radius:50%; border:1px dashed rgba(56,189,248,.6); animation:spin 24s linear infinite;}
+.profile-frame::before{content:""; position:absolute; inset:-26px; border-radius:50%; border:1px solid rgba(255,95,143,.35); animation:spin 18s linear infinite reverse;}
+.profile-frame::after{content:""; position:absolute; inset:-6px; border-radius:50%; box-shadow:0 0 0 2px rgba(255,255,255,.08); animation:profile-pulse 3.5s ease-in-out infinite;}
+@keyframes profile-orbit{
+  0%{transform:translate(-50%,-50%) rotate(0deg) translate(0,0) scale(1);}
+  25%{transform:translate(-50%,-50%) translate(10px,-8px) scale(1.04);}
+  50%{transform:translate(-50%,-50%) translate(0,-14px) scale(1);}
+  75%{transform:translate(-50%,-50%) translate(-10px,-6px) scale(1.04);}
+  100%{transform:translate(-50%,-50%) translate(0,0) scale(1);}
+}
+@keyframes profile-pulse{0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.08), 0 0 30px rgba(255,95,143,.4);}50%{box-shadow:0 0 0 6px rgba(255,255,255,.14), 0 0 60px rgba(56,189,248,.55);}}
 @keyframes floaty{0%,100%{transform:translate(-50%,-50%) translateY(0);} 50%{transform:translate(-50%,-50%) translateY(-8px);}}
+.hero-visual{position:relative;}
 .hero-visual .orbits{width:100%;}
 .hero-visual .core, .hero-visual .core-label{display:none;}
-@media(max-width:480px){.profile-frame{width:120px; height:120px;}}
+@media(max-width:480px){.profile-frame{width:100px; height:100px;}}
 
 /* ============ Tool icon grid ============ */
 .tools-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:14px; margin-bottom:8px;}

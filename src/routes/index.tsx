@@ -233,17 +233,16 @@ function Index() {
             </div>
           </div>
           <div className="hero-visual">
-          <div className="profile-frame">
-            <img src={profileAsset.url} alt="Lokesh Galakatla" className="profile-img" />
-            <div className="profile-ring" />
-          </div>
           <div className="orbits" role="img" aria-label="Orbiting diagram of core skills around a central sun labeled Lokesh">
             <div className="ring" style={{ width: 110, height: 110 }} />
             <div className="ring" style={{ width: 190, height: 190 }} />
             <div className="ring" style={{ width: 270, height: 270 }} />
             <div className="ring" style={{ width: 350, height: 350 }} />
             <div className="ring" style={{ width: 420, height: 420 }} />
-            <div className="core" />
+            <div className="profile-frame">
+              <img src={profileAsset.url} alt="Lokesh Galakatla" className="profile-img" />
+              <div className="profile-ring" />
+            </div>
             <div className="core-label">Lokesh</div>
             {[
               { size: 110, dur: "14s", rev: false, name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
