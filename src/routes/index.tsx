@@ -23,10 +23,35 @@ function Index() {
   const navRef = useRef<HTMLUListElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = useState<string>("about");
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const trailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-portfolio-theme", theme);
   }, [theme]);
+
+  // Custom cursor that follows the mouse with a trailing dot
+  useEffect(() => {
+    const cursor = cursorRef.current;
+    const trail = trailRef.current;
+    if (!cursor || !trail) return;
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let tx = mx, ty = my;
+    const onMove = (e: MouseEvent) => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.transform = `translate(${mx}px, ${my}px)`;
+    };
+    let raf = 0;
+    const loop = () => {
+      tx += (mx - tx) * 0.15;
+      ty += (my - ty) * 0.15;
+      trail.style.transform = `translate(${tx}px, ${ty}px)`;
+      raf = requestAnimationFrame(loop);
+    };
+    window.addEventListener("mousemove", onMove);
+    raf = requestAnimationFrame(loop);
+    return () => { window.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); };
+  }, []);
 
   // Scroll spy
   useEffect(() => {
@@ -131,6 +156,8 @@ function Index() {
     <div className="portfolio-root" data-theme={theme}>
       <div id="stars" />
       <div id="asteroids" />
+      <div className="cursor-trail" ref={trailRef} />
+      <div className="cursor-dot" ref={cursorRef} />
 
       <header>
         <nav>
