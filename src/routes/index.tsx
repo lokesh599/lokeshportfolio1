@@ -23,10 +23,35 @@ function Index() {
   const navRef = useRef<HTMLUListElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = useState<string>("about");
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const trailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-portfolio-theme", theme);
   }, [theme]);
+
+  // Custom cursor that follows the mouse with a trailing dot
+  useEffect(() => {
+    const cursor = cursorRef.current;
+    const trail = trailRef.current;
+    if (!cursor || !trail) return;
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let tx = mx, ty = my;
+    const onMove = (e: MouseEvent) => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.transform = `translate(${mx}px, ${my}px)`;
+    };
+    let raf = 0;
+    const loop = () => {
+      tx += (mx - tx) * 0.15;
+      ty += (my - ty) * 0.15;
+      trail.style.transform = `translate(${tx}px, ${ty}px)`;
+      raf = requestAnimationFrame(loop);
+    };
+    window.addEventListener("mousemove", onMove);
+    raf = requestAnimationFrame(loop);
+    return () => { window.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); };
+  }, []);
 
   // Scroll spy
   useEffect(() => {
@@ -131,6 +156,8 @@ function Index() {
     <div className="portfolio-root" data-theme={theme}>
       <div id="stars" />
       <div id="asteroids" />
+      <div className="cursor-trail" ref={trailRef} />
+      <div className="cursor-dot" ref={cursorRef} />
 
       <header>
         <nav>
@@ -218,24 +245,21 @@ function Index() {
             <div className="ring" style={{ width: 420, height: 420 }} />
             <div className="core" />
             <div className="core-label">Lokesh</div>
-            <div className="orbit-path" style={{ width: 110, height: 110, animationDuration: "14s" }}>
-              <div className="planet" style={{ animationDuration: "14s" }}><span className="label">Python</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 190, height: 190, animationDuration: "20s", animationDirection: "reverse" }}>
-              <div className="planet" style={{ animationDuration: "20s", animationDirection: "reverse" }}><span className="label">SQL</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 270, height: 270, animationDuration: "27s" }}>
-              <div className="planet" style={{ animationDuration: "27s" }}><span className="label">React.js</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 350, height: 350, animationDuration: "34s", animationDirection: "reverse" }}>
-              <div className="planet" style={{ animationDuration: "34s", animationDirection: "reverse" }}><span className="label">Data Viz</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 420, height: 420, animationDuration: "42s" }}>
-              <div className="planet" style={{ animationDuration: "42s" }}><span className="label">Flutter</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 420, height: 420, animationDuration: "42s", animationDelay: "-21s" }}>
-              <div className="planet" style={{ animationDuration: "42s", animationDelay: "-21s" }}><span className="label">Java</span></div>
-            </div>
+            {[
+              { size: 110, dur: "14s", rev: false, name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+              { size: 190, dur: "20s", rev: true,  name: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+              { size: 270, dur: "27s", rev: false, name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+              { size: 350, dur: "34s", rev: true,  name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+              { size: 420, dur: "42s", rev: false, name: "Flutter", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg", delay: "0s" },
+              { size: 420, dur: "42s", rev: true,  name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", delay: "-21s" },
+            ].map((p, i) => (
+              <div key={i} className="orbit-path" style={{ width: p.size, height: p.size, animationDuration: p.dur, animationDirection: p.rev ? "reverse" : "normal", animationDelay: p.delay ?? "0s" }}>
+                <div className="planet" style={{ animationDuration: p.dur, animationDirection: p.rev ? "reverse" : "normal", animationDelay: p.delay ?? "0s" }}>
+                  <img className="planet-icon" src={p.icon} alt={p.name} />
+                  <span className="label">{p.name}</span>
+                </div>
+              </div>
+            ))}
           </div>
           </div>
         </section>
@@ -395,6 +419,8 @@ function Index() {
           </div>
         </section>
 
+        <MemoryPuzzle />
+
         <section className="contact" id="contact">
           <div className="kicker" style={{ justifyContent: "center", display: "flex" }}>Contact</div>
           <h2>Let's build something with data.</h2>
@@ -410,5 +436,80 @@ function Index() {
 
       <footer>© 2026 Lokesh Galakatla · Built with data &amp; curiosity</footer>
     </div>
+  );
+}
+
+function MemoryPuzzle() {
+  const emojis = ["🚀", "🪐", "🌙", "⭐", "☄️", "🛰️", "👨‍🚀", "🌌"];
+  const build = () => {
+    const deck = [...emojis, ...emojis]
+      .map((v, i) => ({ id: i, v, flipped: false, matched: false }))
+      .sort(() => Math.random() - 0.5);
+    return deck;
+  };
+  const [cards, setCards] = useState(build);
+  const [picked, setPicked] = useState<number[]>([]);
+  const [moves, setMoves] = useState(0);
+  const [lock, setLock] = useState(false);
+
+  const solved = cards.every((c) => c.matched);
+
+  const flip = (idx: number) => {
+    if (lock) return;
+    const c = cards[idx];
+    if (c.flipped || c.matched) return;
+    const next = cards.map((x, i) => (i === idx ? { ...x, flipped: true } : x));
+    const nextPicked = [...picked, idx];
+    setCards(next);
+    setPicked(nextPicked);
+    if (nextPicked.length === 2) {
+      setMoves((m) => m + 1);
+      setLock(true);
+      const [a, b] = nextPicked;
+      if (next[a].v === next[b].v) {
+        setTimeout(() => {
+          setCards((cs) => cs.map((x, i) => (i === a || i === b ? { ...x, matched: true } : x)));
+          setPicked([]);
+          setLock(false);
+        }, 400);
+      } else {
+        setTimeout(() => {
+          setCards((cs) => cs.map((x, i) => (i === a || i === b ? { ...x, flipped: false } : x)));
+          setPicked([]);
+          setLock(false);
+        }, 800);
+      }
+    }
+  };
+
+  const reset = () => { setCards(build()); setPicked([]); setMoves(0); setLock(false); };
+
+  return (
+    <section id="puzzle">
+      <div className="section-head">
+        <div className="kicker">Puzzle</div>
+        <h2 className="section-title">Cosmic memory match</h2>
+        <p className="section-sub">A quick break — flip the tiles and match all pairs. Because portfolios should be fun too.</p>
+      </div>
+      <div className="puzzle-bar">
+        <span className="puzzle-stat">Moves: <b>{moves}</b></span>
+        <span className="puzzle-stat">Matched: <b>{cards.filter((c) => c.matched).length / 2}</b> / {emojis.length}</span>
+        {solved && <span className="puzzle-win">Solved! 🎉</span>}
+        <button className="btn btn-ghost" onClick={reset}>Reset</button>
+      </div>
+      <div className="puzzle-grid">
+        {cards.map((c, i) => (
+          <button
+            key={c.id}
+            className={`puzzle-card${c.flipped || c.matched ? " flipped" : ""}${c.matched ? " matched" : ""}`}
+            onClick={() => flip(i)}
+            aria-label={c.flipped ? c.v : "Hidden card"}
+          >
+            <span className="puzzle-face puzzle-back">?</span>
+            <span className="puzzle-face puzzle-front">{c.v}</span>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
