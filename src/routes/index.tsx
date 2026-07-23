@@ -245,24 +245,21 @@ function Index() {
             <div className="ring" style={{ width: 420, height: 420 }} />
             <div className="core" />
             <div className="core-label">Lokesh</div>
-            <div className="orbit-path" style={{ width: 110, height: 110, animationDuration: "14s" }}>
-              <div className="planet" style={{ animationDuration: "14s" }}><span className="label">Python</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 190, height: 190, animationDuration: "20s", animationDirection: "reverse" }}>
-              <div className="planet" style={{ animationDuration: "20s", animationDirection: "reverse" }}><span className="label">SQL</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 270, height: 270, animationDuration: "27s" }}>
-              <div className="planet" style={{ animationDuration: "27s" }}><span className="label">React.js</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 350, height: 350, animationDuration: "34s", animationDirection: "reverse" }}>
-              <div className="planet" style={{ animationDuration: "34s", animationDirection: "reverse" }}><span className="label">Data Viz</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 420, height: 420, animationDuration: "42s" }}>
-              <div className="planet" style={{ animationDuration: "42s" }}><span className="label">Flutter</span></div>
-            </div>
-            <div className="orbit-path" style={{ width: 420, height: 420, animationDuration: "42s", animationDelay: "-21s" }}>
-              <div className="planet" style={{ animationDuration: "42s", animationDelay: "-21s" }}><span className="label">Java</span></div>
-            </div>
+            {[
+              { size: 110, dur: "14s", rev: false, name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+              { size: 190, dur: "20s", rev: true,  name: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+              { size: 270, dur: "27s", rev: false, name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+              { size: 350, dur: "34s", rev: true,  name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+              { size: 420, dur: "42s", rev: false, name: "Flutter", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg", delay: "0s" },
+              { size: 420, dur: "42s", rev: true,  name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", delay: "-21s" },
+            ].map((p, i) => (
+              <div key={i} className="orbit-path" style={{ width: p.size, height: p.size, animationDuration: p.dur, animationDirection: p.rev ? "reverse" : "normal", animationDelay: p.delay ?? "0s" }}>
+                <div className="planet" style={{ animationDuration: p.dur, animationDirection: p.rev ? "reverse" : "normal", animationDelay: p.delay ?? "0s" }}>
+                  <img className="planet-icon" src={p.icon} alt={p.name} />
+                  <span className="label">{p.name}</span>
+                </div>
+              </div>
+            ))}
           </div>
           </div>
         </section>
