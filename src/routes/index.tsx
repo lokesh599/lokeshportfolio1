@@ -419,6 +419,8 @@ function Index() {
           </div>
         </section>
 
+        <MemoryPuzzle />
+
         <section className="contact" id="contact">
           <div className="kicker" style={{ justifyContent: "center", display: "flex" }}>Contact</div>
           <h2>Let's build something with data.</h2>
