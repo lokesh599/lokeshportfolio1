@@ -253,9 +253,9 @@ html{scroll-behavior:smooth;}
   .portfolio-root{cursor:none;}
   .portfolio-root a, .portfolio-root button{cursor:none;}
 }
-.cursor-dot, .cursor-trail{position:fixed; top:0; left:0; pointer-events:none; z-index:9999; border-radius:50%; will-change:transform; mix-blend-mode:screen;}
-.cursor-dot{width:10px; height:10px; margin:-5px 0 0 -5px; background:var(--grad); box-shadow:0 0 12px rgba(255,95,143,.8);}
-.cursor-trail{width:38px; height:38px; margin:-19px 0 0 -19px; border:1.5px solid rgba(56,189,248,.55); box-shadow:0 0 24px rgba(56,189,248,.35); transition:width .2s, height .2s, border-color .2s;}
+.cursor-dot, .cursor-trail{position:fixed; top:0; left:0; pointer-events:none; z-index:9999; border-radius:50%; will-change:transform;}
+.cursor-dot{width:10px; height:10px; margin:-5px 0 0 -5px; background:var(--text); box-shadow:0 0 12px var(--text);}
+.cursor-trail{width:38px; height:38px; margin:-19px 0 0 -19px; border:1.5px solid var(--text); box-shadow:0 0 24px var(--text); transition:width .2s, height .2s, border-color .2s; opacity:.5;}
 @media(hover:none), (pointer:coarse){.cursor-dot, .cursor-trail{display:none;}}
 
 /* ============ Puzzle ============ */
