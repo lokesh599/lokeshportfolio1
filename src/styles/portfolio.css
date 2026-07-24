@@ -61,7 +61,7 @@ html{scroll-behavior:smooth;}
 .hero{position:relative; z-index:1; padding:78px 0 60px; display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center;}
 .eyebrow{font-family:var(--font-mono); font-size:12.5px; color:var(--accent-b); letter-spacing:.14em; text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:10px;}
 .eyebrow::before{content:''; width:22px; height:1px; background:var(--accent-b);}
-.portfolio-root h1{font-family:var(--font-display); font-weight:700; font-size:clamp(38px,6vw,64px); line-height:1.05; letter-spacing:-.01em;}
+.portfolio-root h1{font-family:var(--font-display); font-weight:700; font-size:clamp(28px,4.2vw,48px); line-height:1.08; letter-spacing:-.01em;}
 .portfolio-root h1 .grad{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
 .hero p.lede{margin-top:16px; font-size:17px; color:var(--muted); max-width:480px;}
 .hero-actions{display:flex; gap:14px; margin-top:24px; flex-wrap:wrap;}
