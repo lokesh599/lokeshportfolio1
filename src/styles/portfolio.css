@@ -153,9 +153,12 @@ html{scroll-behavior:smooth;}
 .portfolio-root[data-theme="light"] header .navlinks a{color:#8b93ab;}
 .portfolio-root[data-theme="light"] header .navlinks a:hover,
 .portfolio-root[data-theme="light"] header .navlinks a.active{color:#e7ebf5;}
-.portfolio-root[data-theme="light"] header .icon-link{color:#8b93ab; border-color:#212a45;}
-.portfolio-root[data-theme="light"] header .icon-link:hover{color:#e7ebf5;}
-.portfolio-root[data-theme="light"] header .nav-cta{color:#e7ebf5; border-color:#212a45;}
+.portfolio-root[data-theme="light"] header .icon-link{color:#e7ebf5; background:#0f1424; border-color:#0f1424;}
+.portfolio-root[data-theme="light"] header .icon-link:hover{color:#fff; background:#0f1424; border-color:#38bdf8;}
+.portfolio-root[data-theme="light"] header .nav-cta{color:#e7ebf5; background:#0f1424; border-color:#0f1424;}
+.portfolio-root[data-theme="light"] header .nav-cta:hover{color:#fff; background:#0f1424; border-color:#38bdf8;}
+.portfolio-root[data-theme="light"] header .nav-cta-solid{background:var(--grad); color:#0f1424; border:none;}
+.portfolio-root[data-theme="light"] header .navtoggle{background:#0f1424; border-radius:8px;}
 .portfolio-root[data-theme="light"] header .navtoggle span{background:#e7ebf5;}
 .portfolio-root[data-theme="light"] header .navlinks a .nav-num{background:#2a3350; color:#e7ebf5;}
 
