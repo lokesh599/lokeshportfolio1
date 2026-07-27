@@ -3,6 +3,34 @@ import { useEffect, useRef, useState } from "react";
 import "../styles/portfolio.css";
 import profileAsset from "@/assets/profile.png.asset.json";
 import resumeAsset from "@/assets/lokesh-resume.pdf.asset.json";
+import {
+  User,
+  BrainCircuit,
+  Compass,
+  Sparkles,
+  MapPin,
+  Mail,
+  Phone,
+  GraduationCap,
+  Calendar,
+  Database,
+  Code2,
+  TrendingUp,
+  Copy,
+  Check,
+  Award,
+  Zap,
+  CheckCircle2,
+  ExternalLink,
+  Briefcase,
+  FileText,
+  Download,
+  Github,
+  Layers,
+  ChevronRight,
+  ArrowUp,
+} from "lucide-react";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,32 +53,67 @@ function Index() {
   const [activeId, setActiveId] = useState<string>("about");
   const cursorRef = useRef<HTMLDivElement>(null);
   const trailRef = useRef<HTMLDivElement>(null);
+  const [showTopBtn, setShowTopBtn] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 250) {
+        setShowTopBtn(true);
+      } else {
+        setShowTopBtn(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
     document.documentElement.setAttribute("data-portfolio-theme", theme);
   }, [theme]);
 
-  // Custom cursor that follows the mouse with a trailing dot
+  // Custom cursor that follows the mouse with hover feedback for buttons/links
   useEffect(() => {
     const cursor = cursorRef.current;
     const trail = trailRef.current;
     if (!cursor || !trail) return;
     let mx = window.innerWidth / 2, my = window.innerHeight / 2;
     let tx = mx, ty = my;
+
     const onMove = (e: MouseEvent) => {
-      mx = e.clientX; my = e.clientY;
+      mx = e.clientX;
+      my = e.clientY;
       cursor.style.transform = `translate(${mx}px, ${my}px)`;
+
+      // Hover feedback for clickable elements
+      const target = e.target as HTMLElement | null;
+      const isInteractive = !!target?.closest("a, button, .tool-card, .story-tab, .proj-card-pro, .exp-card-pro, .contact-copy-btn, .info-card, .pillar-card, .slide-tile");
+      if (isInteractive) {
+        cursor.classList.add("hovering");
+        trail.classList.add("hovering");
+      } else {
+        cursor.classList.remove("hovering");
+        trail.classList.remove("hovering");
+      }
     };
+
     let raf = 0;
     const loop = () => {
-      tx += (mx - tx) * 0.15;
-      ty += (my - ty) * 0.15;
+      tx += (mx - tx) * 0.18;
+      ty += (my - ty) * 0.18;
       trail.style.transform = `translate(${tx}px, ${ty}px)`;
       raf = requestAnimationFrame(loop);
     };
+
     window.addEventListener("mousemove", onMove);
     raf = requestAnimationFrame(loop);
-    return () => { window.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); };
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
   // Scroll spy
@@ -212,7 +275,11 @@ function Index() {
       <main className="wrap">
         <section className="hero" id="top">
           <div>
-            <div className="eyebrow">CSE (Data Science) · Class of 2027</div>
+            <div className="eyebrow kicker-badge">
+              <span className="pulse-dot" />
+              <Sparkles style={{ width: 14, height: 14 }} />
+              <span>CSE (DATA SCIENCE) · CLASS OF 2027</span>
+            </div>
             <h1 className="hero-title">
               <span className="hero-line"><AnimatedTitle text="I turn raw data" /></span>
               <br />
@@ -221,134 +288,243 @@ function Index() {
                 <span className="grad"><AnimatedTitle text="clear decisions." /></span>
               </span>
             </h1>
-            <p className="lede">B.Tech Computer Science &amp; Engineering student specializing in Data Science, with hands-on experience across Python data analysis and modern web development.</p>
+            <p className="lede">
+              B.Tech Computer Science &amp; Engineering undergraduate specializing in Data Science, with hands-on experience in Python analytical modeling and modern full-stack web development.
+            </p>
             <div className="hero-actions">
-              <a className="btn btn-primary" href="#projects">View my work →</a>
-              <a className="btn btn-ghost" href={resumeAsset.url} target="_blank" rel="noopener noreferrer">Download Resume</a>
+              <a className="btn btn-primary" href="#projects">
+                <span>View my work</span>
+                <ChevronRight style={{ width: 16, height: 16 }} />
+              </a>
+              <a className="btn btn-ghost" href={resumeAsset.url} target="_blank" rel="noopener noreferrer">
+                <Download style={{ width: 15, height: 15 }} />
+                <span>Resume</span>
+              </a>
+              <a className="btn btn-ghost" href="mailto:galakatalalokesh26@gmail.com">
+                <Mail style={{ width: 15, height: 15 }} />
+                <span>Contact</span>
+              </a>
             </div>
-            <div className="hero-meta">
-              <div><b>8.08</b>CGPA</div>
-              <div><b>2</b>Internships</div>
-              <div><b>2</b>Featured projects</div>
-              <div><b>Surampalem, AP</b>Based in</div>
+            <div className="hero-stats-grid">
+              <div className="hero-stat-card">
+                <div className="h-stat-num">8.08</div>
+                <div className="h-stat-lbl">CGPA Academic Score</div>
+              </div>
+              <div className="hero-stat-card">
+                <div className="h-stat-num">2</div>
+                <div className="h-stat-lbl">Industry Internships</div>
+              </div>
+              <div className="hero-stat-card">
+                <div className="h-stat-num">2</div>
+                <div className="h-stat-lbl">Featured Projects</div>
+              </div>
+              <div className="hero-stat-card">
+                <div className="h-stat-num">AP</div>
+                <div className="h-stat-lbl">Surampalem, India</div>
+              </div>
             </div>
           </div>
           <div className="hero-visual">
-          <div className="orbits" role="img" aria-label="Orbiting diagram of core skills around a central sun labeled Lokesh">
-            <div className="ring" style={{ width: 110, height: 110 }} />
-            <div className="ring" style={{ width: 190, height: 190 }} />
-            <div className="ring" style={{ width: 270, height: 270 }} />
-            <div className="ring" style={{ width: 350, height: 350 }} />
-            <div className="ring" style={{ width: 420, height: 420 }} />
-            <div className="profile-frame">
-              <img src={profileAsset.url} alt="Lokesh Galakatla" className="profile-img" />
-              <div className="profile-ring" />
-            </div>
-            <div className="core-label">Lokesh</div>
-            {[
-              { size: 110, dur: "14s", rev: false, name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-              { size: 190, dur: "20s", rev: true,  name: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
-              { size: 270, dur: "27s", rev: false, name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-              { size: 350, dur: "34s", rev: true,  name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
-              { size: 420, dur: "42s", rev: false, name: "Flutter", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg", delay: "0s" },
-              { size: 420, dur: "42s", rev: true,  name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", delay: "-21s" },
-            ].map((p, i) => (
-              <div key={i} className="orbit-path" style={{ width: p.size, height: p.size, animationDuration: p.dur, animationDirection: p.rev ? "reverse" : "normal", animationDelay: p.delay ?? "0s" }}>
-                <div className="planet" style={{ animationDuration: p.dur, animationDirection: p.rev ? "reverse" : "normal", animationDelay: p.delay ?? "0s" }}>
-                  <img className="planet-icon" src={p.icon} alt={p.name} />
-                  <span className="label">{p.name}</span>
+            <div className="orbits" role="img" aria-label="Solar system orbiting diagram of skills around profile picture">
+              <div className="ring" style={{ width: 170, height: 170 }} />
+              <div className="ring" style={{ width: 235, height: 235 }} />
+              <div className="ring" style={{ width: 300, height: 300 }} />
+              <div className="ring" style={{ width: 365, height: 365 }} />
+              <div className="ring" style={{ width: 430, height: 430 }} />
+              <div className="profile-frame">
+                <img
+                  src="/profile.jpg"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = profileAsset.url;
+                  }}
+                  alt="Lokesh Galakatla"
+                  className="profile-img"
+                />
+                <div className="profile-ring" />
+              </div>
+              <div className="core-label">Lokesh</div>
+              {[
+                { size: 170, dur: "18s", rev: false, name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+                { size: 235, dur: "24s", rev: true,  name: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+                { size: 235, dur: "24s", rev: true,  name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", delay: "-12s" },
+                { size: 300, dur: "30s", rev: false, name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+                { size: 300, dur: "30s", rev: false, name: "Pandas", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg", delay: "-15s" },
+                { size: 365, dur: "36s", rev: true,  name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+                { size: 365, dur: "36s", rev: true,  name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg", delay: "-18s" },
+                { size: 430, dur: "42s", rev: false, name: "Flutter", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" },
+                { size: 430, dur: "42s", rev: false, name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg", delay: "-21s" },
+              ].map((p, i) => (
+                <div key={i} className="orbit-path" style={{ width: p.size, height: p.size, animationDuration: p.dur, animationDirection: p.rev ? "reverse" : "normal", animationDelay: p.delay ?? "0s" }}>
+                  <div className="planet" style={{ animationDuration: p.dur, animationDirection: p.rev ? "reverse" : "normal", animationDelay: p.delay ?? "0s" }}>
+                    <img className="planet-icon" src={p.icon} alt={p.name} />
+                    <span className="label">{p.name}</span>
+                  </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <AboutSection />
+
+        <section id="experience" className="exp-section-pro">
+          <div className="section-head">
+            <div className="kicker-badge">
+              <Briefcase style={{ width: 14, height: 14 }} />
+              <span>CAREER &amp; INTERNSHIPS</span>
+            </div>
+            <h2 className="section-title">
+              Where I've Delivered <span className="grad">Real Value</span>
+            </h2>
+            <p className="section-sub">
+              Two specialized internships spanning both analytical data engineering and production full-stack web application development.
+            </p>
+          </div>
+
+          <div className="exp-timeline-pro">
+            <div className="exp-card-pro">
+              <div className="exp-card-header">
+                <div>
+                  <div className="exp-company-badge">
+                    <Code2 className="c-icon" />
+                    <span>Smart Bridge · Summer Online Internship</span>
+                  </div>
+                  <h3 className="exp-role-title">Vibe Coding Intern</h3>
+                </div>
+                <div className="exp-date-pill">MAY 2026 — JUL 2026</div>
               </div>
-            ))}
-          </div>
-          </div>
-        </section>
 
-        <section id="about">
-          <div className="section-head">
-            <div className="kicker">About</div>
-            <h2 className="section-title">Grounded in analysis, comfortable building products</h2>
-          </div>
-          <div className="about-grid">
-            <div>
-              <p>I'm a <b>Computer Science &amp; Engineering (Data Science)</b> student at Aditya College of Engineering &amp; Technology, currently maintaining a <b>CGPA of 8.08</b>. My interest sits at the intersection of data analysis and software engineering — I like finding the story inside a messy dataset just as much as I like shipping the interface that tells that story to someone else.</p>
-              <p>My background spans <b>Python, SQL, and Java</b> for analysis and problem-solving, alongside practical experience building responsive web applications with <b>React.js and TypeScript</b>. Two internships have taken me from cleaning real-world datasets to integrating frontend components with live backend APIs.</p>
-              <p>I'm looking for opportunities to apply these skills on projects that matter, keep learning in a fast-moving team, and grow into a well-rounded data &amp; software engineer.</p>
-            </div>
-            <div className="fact-list">
-              <div className="fact"><span>LOCATION</span><span>Kanchugummala, Andhra Pradesh</span></div>
-              <div className="fact"><span>EMAIL</span><span>galakatalalokesh26@gmail.com</span></div>
-              <div className="fact"><span>PHONE</span><span>+91 8309113101</span></div>
-              <div className="fact"><span>DEGREE</span><span>B.Tech CSE (Data Science)</span></div>
-              <div className="fact"><span>GRADUATING</span><span>2027</span></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="experience">
-          <div className="section-head">
-            <div className="kicker">Experience</div>
-            <h2 className="section-title">Where I've worked</h2>
-            <p className="section-sub">Two internships, two different sides of building with data — analysis first, then the applications that put it in front of people.</p>
-          </div>
-          <div className="timeline">
-            <div className="tl-item">
-              <div className="tl-dot" />
-              <div className="tl-date">MAY 2026 — JUL 2026</div>
-              <div className="tl-role">Vibe Coding Intern</div>
-              <div className="tl-org">Smart Bridge · Summer Online Internship</div>
-              <ul>
-                <li>Collaborated on the development of modern web applications using industry-standard development practices.</li>
-                <li>Built responsive and interactive user interfaces using React.js, TypeScript, HTML, CSS, and JavaScript.</li>
-                <li>Integrated frontend components with backend APIs to deliver seamless user experiences.</li>
-                <li>Used Git and GitHub for version control, collaboration, and clean, maintainable code.</li>
+              <ul className="exp-bullets">
+                <li>
+                  <CheckCircle2 className="bullet-icon" />
+                  <span>Collaborated on the development of modern web applications using industry-standard agile practices.</span>
+                </li>
+                <li>
+                  <CheckCircle2 className="bullet-icon" />
+                  <span>Built responsive and interactive user interfaces using React.js, TypeScript, HTML, CSS, and JavaScript.</span>
+                </li>
+                <li>
+                  <CheckCircle2 className="bullet-icon" />
+                  <span>Integrated frontend components with live backend APIs to deliver seamless user experiences.</span>
+                </li>
+                <li>
+                  <CheckCircle2 className="bullet-icon" />
+                  <span>Utilized Git and GitHub for version control, code reviews, and maintaining clean codebases.</span>
+                </li>
               </ul>
+
+              <div className="exp-tech-tags">
+                <span>React.js</span><span>TypeScript</span><span>HTML5/CSS3</span><span>Git</span><span>GitHub</span><span>API Integration</span>
+              </div>
             </div>
-            <div className="tl-item">
-              <div className="tl-dot" />
-              <div className="tl-date">MAY 2025 — JUL 2025</div>
-              <div className="tl-role">Data Analysis Intern</div>
-              <div className="tl-org">APSSDC · Summer Online Internship</div>
-              <ul>
-                <li>Analyzed real-world datasets using Python to identify trends and extract meaningful insights.</li>
-                <li>Performed data cleaning, preprocessing, and visualization to improve data quality and support analysis.</li>
-                <li>Applied statistical analysis techniques to solve data-driven problems and interpret results effectively.</li>
-                <li>Strengthened analytical thinking through hands-on projects and practical assignments.</li>
+
+            <div className="exp-card-pro">
+              <div className="exp-card-header">
+                <div>
+                  <div className="exp-company-badge">
+                    <Database className="c-icon" />
+                    <span>APSSDC · Summer Online Internship</span>
+                  </div>
+                  <h3 className="exp-role-title">Data Analysis Intern</h3>
+                </div>
+                <div className="exp-date-pill">MAY 2025 — JUL 2025</div>
+              </div>
+
+              <ul className="exp-bullets">
+                <li>
+                  <CheckCircle2 className="bullet-icon" />
+                  <span>Analyzed complex real-world datasets using Python to identify underlying trends and derive actionable metrics.</span>
+                </li>
+                <li>
+                  <CheckCircle2 className="bullet-icon" />
+                  <span>Executed data cleaning, preprocessing, and exploratory visualization to improve data quality for modeling.</span>
+                </li>
+                <li>
+                  <CheckCircle2 className="bullet-icon" />
+                  <span>Applied statistical analysis techniques to solve data-driven business problems and interpret results effectively.</span>
+                </li>
+                <li>
+                  <CheckCircle2 className="bullet-icon" />
+                  <span>Strengthened analytical problem-solving through hands-on project assignments and data pipelines.</span>
+                </li>
               </ul>
-            </div>
-          </div>
-        </section>
 
-        <section id="projects">
-          <div className="section-head">
-            <div className="kicker">Projects</div>
-            <h2 className="section-title">Selected work</h2>
-            <p className="section-sub">A look at how I approach both ends of the stack — from raw data to a usable interface.</p>
-          </div>
-          <div className="proj-grid">
-            <div className="proj-card">
-              <span className="proj-tag">Data Analysis</span>
-              <h3>Student Social Media Addiction</h3>
-              <p>Analyzed real-world survey data to uncover trends in student social media usage, cleaning and preprocessing the dataset before applying statistical techniques to interpret behavior patterns and support informed decisions.</p>
-              <div className="stack">
-                <span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Jupyter Notebook</span>
-              </div>
-            </div>
-            <div className="proj-card">
-              <span className="proj-tag">Full-Stack Web App</span>
-              <h3>EcoTrack</h3>
-              <p>An environmental monitoring and sustainability platform — a responsive web application that visualizes environmental data through interactive, reusable UI components, integrated end-to-end with backend APIs.</p>
-              <div className="stack">
-                <span>React.js</span><span>TypeScript</span><span>Node.js</span><span>HTML/CSS</span><span>Git</span>
+              <div className="exp-tech-tags">
+                <span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Statistical Analysis</span><span>Data Preprocessing</span>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="skills">
+        <section id="projects" className="proj-section-pro">
           <div className="section-head">
-            <div className="kicker">Skills</div>
-            <h2 className="section-title">Toolkit</h2>
+            <div className="kicker-badge">
+              <Code2 style={{ width: 14, height: 14 }} />
+              <span>FEATURED WORK</span>
+            </div>
+            <h2 className="section-title">
+              Engineering Solutions with <span className="grad">Data &amp; Code</span>
+            </h2>
+            <p className="section-sub">
+              Demonstrating full-spectrum technical capabilities — from cleaning raw data to shipping performant web applications.
+            </p>
+          </div>
+
+          <div className="proj-grid-pro">
+            <div className="proj-card-pro">
+              <div className="proj-card-top">
+                <span className="proj-tag-pill tag-data">Data Analysis</span>
+                <a className="proj-link-icon" href="https://github.com/lokesh599" target="_blank" rel="noopener noreferrer" title="View Source on GitHub">
+                  <Github style={{ width: 16, height: 16 }} />
+                </a>
+              </div>
+              <h3 className="proj-title">Student Social Media Addiction</h3>
+              <p className="proj-desc">
+                Analyzed real-world survey data to uncover usage patterns among students. Cleaned and preprocessed raw survey records before applying statistical techniques to interpret behavioral trends and drive insights.
+              </p>
+              <div className="proj-highlights">
+                <div className="p-hl"><CheckCircle2 className="hl-icon" /> Preprocessed real-world survey datasets</div>
+                <div className="p-hl"><CheckCircle2 className="hl-icon" /> Statistical trend analysis &amp; visualization</div>
+              </div>
+              <div className="proj-stack">
+                <span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Jupyter</span>
+              </div>
+            </div>
+
+            <div className="proj-card-pro">
+              <div className="proj-card-top">
+                <span className="proj-tag-pill tag-web">Full-Stack Web App</span>
+                <a className="proj-link-icon" href="https://github.com/lokesh599" target="_blank" rel="noopener noreferrer" title="View Source on GitHub">
+                  <Github style={{ width: 16, height: 16 }} />
+                </a>
+              </div>
+              <h3 className="proj-title">EcoTrack</h3>
+              <p className="proj-desc">
+                An environmental monitoring and sustainability platform — a responsive web application that visualizes environmental metrics through interactive, reusable UI components, integrated end-to-end with backend APIs.
+              </p>
+              <div className="proj-highlights">
+                <div className="p-hl"><CheckCircle2 className="hl-icon" /> Interactive data visualization UI</div>
+                <div className="p-hl"><CheckCircle2 className="hl-icon" /> End-to-end REST API integration</div>
+              </div>
+              <div className="proj-stack">
+                <span>React.js</span><span>TypeScript</span><span>Node.js</span><span>HTML5/CSS3</span><span>Git</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="skills" className="skills-section-pro">
+          <div className="section-head">
+            <div className="kicker-badge">
+              <Layers style={{ width: 14, height: 14 }} />
+              <span>TECHNICAL TOOLKIT</span>
+            </div>
+            <h2 className="section-title">
+              Tools &amp; <span className="grad">Technologies</span>
+            </h2>
+            <p className="section-sub">
+              Core technologies, frameworks, and analytical libraries I leverage across data science &amp; web engineering.
+            </p>
           </div>
           <div className="tools-grid">
             {[
@@ -375,46 +551,94 @@ function Index() {
               </div>
             ))}
           </div>
-          <div className="skills-wrap" style={{ marginTop: 20 }}>
+          <div className="skills-wrap" style={{ marginTop: 24 }}>
             <div className="skill-group">
-              <h4>Data</h4>
+              <h4>Data Engineering &amp; Science</h4>
               <div className="chip-row">
                 <span className="chip">Data Analysis</span>
                 <span className="chip">Data Cleaning</span>
                 <span className="chip">Data Visualization</span>
-                <span className="chip">Data Engineering</span>
+                <span className="chip">Data Preprocessing</span>
                 <span className="chip">Database Management</span>
               </div>
             </div>
             <div className="skill-group">
-              <h4>Working Style</h4>
+              <h4>Professional Mindset</h4>
               <div className="chip-row">
                 <span className="chip">Problem Solving</span>
-                <span className="chip">Communication</span>
-                <span className="chip">Teamwork</span>
-                <span className="chip">Time Management</span>
+                <span className="chip">Technical Communication</span>
+                <span className="chip">Agile Teamwork</span>
+                <span className="chip">Adaptability</span>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="education">
+        <section id="education" className="edu-section-pro">
           <div className="section-head">
-            <div className="kicker">Education</div>
-            <h2 className="section-title">Academic background &amp; achievements</h2>
-          </div>
-          <div className="edu-grid">
-            <div className="edu-card">
-              <h3>Bachelor of Technology — CSE (Data Science)</h3>
-              <div className="edu-sub">Aditya College of Engineering &amp; Technology, Surampalem · 2023 – 2027</div>
-              <div className="cgpa">8.08 <span>/ 10 CGPA</span></div>
+            <div className="kicker-badge">
+              <GraduationCap style={{ width: 14, height: 14 }} />
+              <span>ACADEMICS &amp; CERTIFICATIONS</span>
             </div>
-            <div className="ach-card">
-              <h4>Achievements</h4>
-              <ul>
-                <li>Successfully completed Data Analysis Internship at APSSDC.</li>
-                <li>Introduction to Data Science — Cisco Networking Academy.</li>
-              </ul>
+            <h2 className="section-title">
+              Foundational Excellence &amp; <span className="grad">Achievements</span>
+            </h2>
+          </div>
+
+          <div className="edu-grid-pro">
+            {/* Degree Card */}
+            <div className="edu-card-pro">
+              <div className="edu-card-header">
+                <div className="edu-icon-badge">
+                  <GraduationCap />
+                </div>
+                <div>
+                  <h3 className="edu-degree-title">Bachelor of Technology — CSE (Data Science)</h3>
+                  <div className="edu-inst">Aditya College of Engineering &amp; Technology, Surampalem</div>
+                  <div className="edu-year-pill">2023 – 2027 (Current 3rd Year)</div>
+                </div>
+              </div>
+
+              <div className="cgpa-box-pro">
+                <div className="cgpa-top">
+                  <span className="cgpa-num">8.08</span>
+                  <span className="cgpa-denom">/ 10 CGPA</span>
+                </div>
+                <div className="cgpa-bar-wrap">
+                  <div className="cgpa-bar-fill" style={{ width: "80.8%" }} />
+                </div>
+                <span className="cgpa-sub-lbl">80.8% Cumulative Academic Performance</span>
+              </div>
+            </div>
+
+            {/* Achievements Card */}
+            <div className="ach-card-pro">
+              <h3 className="ach-title">
+                <Award className="icon-sm" /> Verified Certifications &amp; Achievements
+              </h3>
+              <div className="ach-list">
+                <div className="ach-item-pro">
+                  <div className="ach-icon"><Award /></div>
+                  <div>
+                    <h4>APSSDC Data Analysis Internship Certification</h4>
+                    <p>Hands-on certification for real-world data cleaning, preprocessing, and statistical analysis using Python.</p>
+                  </div>
+                </div>
+                <div className="ach-item-pro">
+                  <div className="ach-icon"><Award /></div>
+                  <div>
+                    <h4>Introduction to Data Science — Cisco Networking Academy</h4>
+                    <p>Verified certification covering foundational data science principles, data pipelines, and analytics tools.</p>
+                  </div>
+                </div>
+                <div className="ach-item-pro">
+                  <div className="ach-icon"><Award /></div>
+                  <div>
+                    <h4>Smart Bridge Vibe Coding Internship Certificate</h4>
+                    <p>Web application engineering, React.js UI development, and API integration.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -434,7 +658,23 @@ function Index() {
         </section>
       </main>
 
-      <footer>© 2026 Lokesh Galakatla · Built with data &amp; curiosity</footer>
+      {/* Floating Back to Top Arrow Button */}
+      {showTopBtn && (
+        <button
+          className="back-to-top-floating"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+          title="Back to Top"
+        >
+          <ArrowUp className="top-arrow-icon" />
+        </button>
+      )}
+
+      <footer className="portfolio-footer">
+        <div className="footer-content">
+          <span>© 2026 Lokesh Galakatla · Built with data &amp; curiosity</span>
+        </div>
+      </footer>
     </div>
   );
 }
@@ -514,3 +754,268 @@ function SlidePuzzle() {
     </section>
   );
 }
+
+function AboutSection() {
+  const [activeTab, setActiveTab] = useState<"story" | "philosophy" | "vision">("story");
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText("galakatalalokesh26@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <section id="about" className="about-section">
+      <div className="about-bg-glow" aria-hidden="true" />
+
+      <div className="section-head">
+        <div className="kicker-badge">
+          <span className="pulse-dot" />
+          <Sparkles style={{ width: 14, height: 14 }} />
+          <span>ABOUT ME</span>
+        </div>
+        <h2 className="section-title">
+          Grounded in Data Analysis, <span className="grad">Driven by Product Engineering</span>
+        </h2>
+        <p className="section-sub">
+          Computer Science &amp; Engineering (Data Science) undergraduate passionate about discovering actionable stories in complex datasets and engineering intuitive modern web applications.
+        </p>
+      </div>
+
+      <div className="about-main-grid">
+        {/* Main Glassmorphic Card */}
+        <div className="about-story-card">
+          <div className="story-card-header">
+            <div className="story-tabs" role="tablist">
+              <button
+                className={`story-tab ${activeTab === "story" ? "active" : ""}`}
+                onClick={() => setActiveTab("story")}
+                role="tab"
+                aria-selected={activeTab === "story"}
+              >
+                <User className="tab-icon" />
+                <span>My Story</span>
+              </button>
+              <button
+                className={`story-tab ${activeTab === "philosophy" ? "active" : ""}`}
+                onClick={() => setActiveTab("philosophy")}
+                role="tab"
+                aria-selected={activeTab === "philosophy"}
+              >
+                <BrainCircuit className="tab-icon" />
+                <span>Philosophy</span>
+              </button>
+              <button
+                className={`story-tab ${activeTab === "vision" ? "active" : ""}`}
+                onClick={() => setActiveTab("vision")}
+                role="tab"
+                aria-selected={activeTab === "vision"}
+              >
+                <Compass className="tab-icon" />
+                <span>Vision</span>
+              </button>
+            </div>
+            <div className="status-badge">
+              <span className="status-dot" />
+              <span>Available for Roles</span>
+            </div>
+          </div>
+
+          <div className="story-card-body">
+            {activeTab === "story" && (
+              <div className="tab-pane anim-fade-in">
+                <p className="story-lead">
+                  I'm a <b>Computer Science &amp; Engineering (Data Science)</b> student at Aditya College of Engineering &amp; Technology, maintaining a strong academic standing with a <b>CGPA of 8.08 / 10</b>.
+                </p>
+                <p>
+                  My core interest lies at the intersection of data analysis and software development. I thrive when extracting meaningful patterns from raw data as much as when building responsive, user-centered web applications that turn insights into action.
+                </p>
+                <p>
+                  Through hands-on internships at <b>APSSDC</b> and <b>Smart Bridge</b>, I've built expertise across <b>Python, SQL, and Java</b> for data processing alongside modern web engineering using <b>React.js and TypeScript</b>.
+                </p>
+                <div className="quote-box">
+                  <span className="quote-accent">"</span>
+                  <p>I find as much joy in uncovering hidden patterns inside a messy dataset as I do in shipping an intuitive interface that delivers those insights to real people.</p>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "philosophy" && (
+              <div className="tab-pane anim-fade-in">
+                <div className="philosophy-grid">
+                  <div className="philo-item">
+                    <div className="philo-icon"><Database /></div>
+                    <div>
+                      <h4>Data-Informed Decisions</h4>
+                      <p>Every software solution is strongest when built on validated data logic, statistical rigor, and clear metrics.</p>
+                    </div>
+                  </div>
+                  <div className="philo-item">
+                    <div className="philo-icon"><Code2 /></div>
+                    <div>
+                      <h4>Clean &amp; Maintainable Code</h4>
+                      <p>Prioritizing modular React components, typed APIs, version control hygiene, and accessible UI designs.</p>
+                    </div>
+                  </div>
+                  <div className="philo-item">
+                    <div className="philo-icon"><TrendingUp /></div>
+                    <div>
+                      <h4>Continuous Growth</h4>
+                      <p>Constantly upgrading skills across data pipelines, web frameworks, and algorithmic problem-solving.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "vision" && (
+              <div className="tab-pane anim-fade-in">
+                <p className="story-lead">
+                  Looking ahead, my goal is to join a high-impact engineering team where I can contribute to both data analytical pipelines and user-facing web products.
+                </p>
+                <p>
+                  Whether optimizing data processing workflows or crafting performant frontend interfaces, I aim to continuously bridge the gap between technical data logic and user experience.
+                </p>
+                <div className="vision-highlights">
+                  <div className="v-chip"><CheckCircle2 className="v-icon" /> Target Roles: Data Analyst / Software Engineer</div>
+                  <div className="v-chip"><CheckCircle2 className="v-icon" /> Open to: Full-time &amp; Internship Opportunities</div>
+                  <div className="v-chip"><CheckCircle2 className="v-icon" /> Location: On-site / Hybrid / Remote</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="story-card-footer">
+            <div className="stat-pill">
+              <span className="stat-val">8.08</span>
+              <span className="stat-lbl">CGPA</span>
+            </div>
+            <div className="stat-divider" />
+            <div className="stat-pill">
+              <span className="stat-val">2</span>
+              <span className="stat-lbl">Internships</span>
+            </div>
+            <div className="stat-divider" />
+            <div className="stat-pill">
+              <span className="stat-val">2027</span>
+              <span className="stat-lbl">Graduation Year</span>
+            </div>
+            <div className="stat-divider" />
+            <div className="stat-pill">
+              <span className="stat-val">B.Tech</span>
+              <span className="stat-lbl">CSE (Data Science)</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Info Panel */}
+        <div className="about-info-panel">
+          {/* Quick Profile Details */}
+          <div className="info-card profile-details-card">
+            <div className="about-profile-header">
+              <img
+                src="/profile.jpg"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = profileAsset.url;
+                }}
+                alt="Lokesh Galakatla"
+                className="about-avatar-img"
+              />
+              <div>
+                <h3 className="about-name">Lokesh Galakatla</h3>
+                <span className="about-role">B.Tech CSE (Data Science)</span>
+              </div>
+            </div>
+            <div className="info-list">
+              <div className="info-row">
+                <div className="info-label"><MapPin className="row-icon" /> Location</div>
+                <div className="info-val">Kanchugummala, AP</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label"><GraduationCap className="row-icon" /> College</div>
+                <div className="info-val">Aditya Coll. of Eng. &amp; Tech.</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label"><Award className="row-icon" /> Specialization</div>
+                <div className="info-val">Data Science</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label"><Calendar className="row-icon" /> Class Year</div>
+                <div className="info-val">2023 – 2027</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Contact Action Card */}
+          <div className="info-card contact-action-card">
+            <h3 className="info-card-title">
+              <Zap className="icon-sm" /> Get In Touch
+            </h3>
+            <p className="contact-card-sub">Let's collaborate or discuss potential opportunities.</p>
+
+            <div className="contact-card-actions">
+              <button className="contact-copy-btn" onClick={handleCopyEmail} title="Click to copy email">
+                <Mail className="btn-icon" />
+                <span className="email-text">galakatalalokesh26@gmail.com</span>
+                {copied ? <Check className="copy-icon text-green" /> : <Copy className="copy-icon" />}
+              </button>
+
+              <div className="contact-btn-group">
+                <a href="mailto:galakatalalokesh26@gmail.com" className="contact-mini-btn">
+                  <Mail className="mini-icon" /> Email
+                </a>
+                <a href="tel:+918309113101" className="contact-mini-btn">
+                  <Phone className="mini-icon" /> Call
+                </a>
+                <a href="https://www.linkedin.com/in/lokesh-galakatla-962256305/" target="_blank" rel="noopener noreferrer" className="contact-mini-btn">
+                  <ExternalLink className="mini-icon" /> LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3 Pillars of Expertise */}
+      <div className="about-pillars">
+        <div className="pillar-card">
+          <div className="pillar-header">
+            <div className="pillar-icon-box grad-bg-1"><Database /></div>
+            <span className="pillar-num">01</span>
+          </div>
+          <h3>Data Analytics &amp; Science</h3>
+          <p>Extracting trends, cleaning complex datasets, and performing statistical modeling to drive data-backed decisions.</p>
+          <div className="pillar-tags">
+            <span>Python</span><span>SQL</span><span>Pandas</span><span>NumPy</span>
+          </div>
+        </div>
+
+        <div className="pillar-card">
+          <div className="pillar-header">
+            <div className="pillar-icon-box grad-bg-2"><Code2 /></div>
+            <span className="pillar-num">02</span>
+          </div>
+          <h3>Full-Stack Web Development</h3>
+          <p>Engineering responsive, dynamic user interfaces connected to backend APIs with standard software practices.</p>
+          <div className="pillar-tags">
+            <span>React.js</span><span>TypeScript</span><span>HTML5/CSS3</span><span>Git</span>
+          </div>
+        </div>
+
+        <div className="pillar-card">
+          <div className="pillar-header">
+            <div className="pillar-icon-box grad-bg-3"><Sparkles /></div>
+            <span className="pillar-num">03</span>
+          </div>
+          <h3>Problem Solving &amp; Logic</h3>
+          <p>Applying structured analytical thinking to complex software challenges, optimization, and real-world projects.</p>
+          <div className="pillar-tags">
+            <span>Java</span><span>Algorithms</span><span>API Integration</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
