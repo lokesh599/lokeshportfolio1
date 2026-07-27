@@ -252,7 +252,7 @@ function Index() {
             <a className="icon-link" href="https://www.linkedin.com/in/lokesh-galakatla-962256305/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
               <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56z" /></svg>
             </a>
-            <a className="nav-cta nav-cta-solid" href={resumeAsset.url} target="_blank" rel="noopener noreferrer">Resume</a>
+            <a className="nav-cta nav-cta-solid" href="/lokesh-resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
           </div>
           <button className="navtoggle" id="navtoggle" aria-label="Toggle menu" aria-expanded="false">
             <span /><span /><span />
@@ -267,7 +267,7 @@ function Index() {
             <li><a href="#education">Education</a></li>
             <li><a href="https://github.com/lokesh599" target="_blank" rel="noopener noreferrer">GitHub</a></li>
             <li><a href="https://www.linkedin.com/in/lokesh-galakatla-962256305/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-            <li><a className="nav-cta" href={resumeAsset.url} target="_blank" rel="noopener noreferrer">Resume</a></li>
+            <li><a className="nav-cta" href="/lokesh-resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></li>
           </ul>
         </div>
       </header>
@@ -296,7 +296,7 @@ function Index() {
                 <span>View my work</span>
                 <ChevronRight style={{ width: 16, height: 16 }} />
               </a>
-              <a className="btn btn-ghost" href={resumeAsset.url} target="_blank" rel="noopener noreferrer">
+              <a className="btn btn-ghost" href="/lokesh-resume.pdf" target="_blank" rel="noopener noreferrer" download="Lokesh_Galakatla_Resume.pdf">
                 <Download style={{ width: 15, height: 15 }} />
                 <span>Resume</span>
               </a>
